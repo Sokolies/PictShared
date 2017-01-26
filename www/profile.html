@@ -3,6 +3,12 @@
 		<ion-nav-title>Profile</ion-nav-title>
 	</ion-nav-bar>
 	<ion-content>
-		
-	</ion-content>
-</ion-view>
+		<div class="card">
+			<div class="item item-avatar">
+				<h2>{{currentUser.displayName}}</h2>
+				<img ng-src="{{currentUser.profilePictureURL}}">
+				<p>Subscribe since {{currentUser.createdAt | date : 'LLLL d, yyyy'}}</p>
+				</div>
+			</div>
+		</ion-content>
+	</ion-view>

@@ -199,5 +199,6 @@ angular.module('starter', ['ionic', 'app.data-service'])
     console.log(dataService.getCurrentUser());
 }])
 .controller('ProfileCtrl', ['$scope', 'dataService', function ($scope, dataService) {
-    console.log(dataService.getCurrentUser());
+    $scope.currentUser = dataService.getCurrentUser();
+    console.log($scope.currentUser);
 }])
