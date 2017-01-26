@@ -1,1 +1,19 @@
 /* Empty. Add your own CSS if you like */
+.right-icon{
+	float: right;
+	font-size: 40px;
+	padding-right: 0;
+}
+
+.likeButton{
+	float: right;
+}
+
+#input-comment{
+	width: 100%;
+	padding: 0 5px;
+}
+
+#input-comment-submit{
+	width: 100px;
+}

@@ -3,6 +3,32 @@
 		<ion-nav-title>Newsfeed</ion-nav-title>
 	</ion-nav-bar>
 	<ion-content>
-		<h1>Home</h1>
+		<ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+		<ion-list>
+			<ion-item ng-repeat="item in posts track by $index">
+				<div class="list card">
+					<div class="item item-avatar">
+						<img ng-src="{{item.user.profilePictureURL}}">
+						<button 
+						ng-click="unlikeOrLikePost(item)" 
+						ng-class="{'ion-ios-heart':item.likedByCurrentUser, 'ion-ios-heart-outline': !item.likedByCurrentUser}" 
+						class="button button-icon ion-ios-heart right-icon"
+						ng-disable="likeDisabled"></button>
+						<h2>{{item.user.displayName}}</h2>
+						<p>{{item.createdAt | date : 'LLLL d, yyyy'}}</p>
+					</div>
+
+					<div class="item item-body">
+						<img class="full-image" ng-src="{{item.imageURL}}">
+						<p>{{item.message}}</p>
+						<p>
+							<a ng-href="#/root/likes/{{item.id}}" class="subdued">{{item.likesCount}} Like(s)</a>
+							<a ng-href="#/root/comments/{{item.id}}" class="subdued">{{item.commentsCount}} Comment(s)</a>
+						</p>
+					</div>
+
+				</div>
+			</ion-item>
+		</ion-list>
 	</ion-content>
 </ion-view>
