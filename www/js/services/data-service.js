@@ -15,6 +15,21 @@ angular.module('app.data-service', ['ionic', 'app.backend-services'])
 		return usersService.getCurrentUser();
 	}	
 
+	this.getUserByUsernameAndPass = function(username, pass) {
+
+		var deferred = $q.defer();
+		$timeout(function() {
+			var user = usersService.getUserByUsernameAndPass(username, pass);
+			if (user != null) {
+				deferred.resolve(true);
+			} else {
+				deferred.resolve(false);
+			}
+		}, defaultTimout);
+
+		return deferred.promise;
+	}	
+
 	// Get a user by id
 	// Promise is resolved with a user object on success
 	this.getUserById = function(userId) {

@@ -23,6 +23,16 @@ angular.module('app.backend-services', ['ionic', 'app.database-service'])
 		}
 	}
 
+	this.getUserByUsernameAndPass = function(username,pass) {
+		var users = databaseService.users;
+		angular.forEach(users, function(user) {
+			if (user.username === username && user.password === pass){
+				_currentUser = user;
+			}
+		});
+		return _currentUser;
+	}
+
 	this.getUsersById = function() {
 		var usersById = {}
 		var users = databaseService.users;
@@ -213,7 +223,7 @@ angular.module('app.backend-services', ['ionic', 'app.database-service'])
 
 			likes.push(likeCopy);
 		});
-	
+
 		return likes;
 	}
 

@@ -7,19 +7,22 @@ angular.module('app.database-service', ['ionic'])
 		username: "soham",
 		displayName: "Soham Murphy",
 		profilePictureURL: "./img/soham.jpg",
-		createdAt: new Date()
+		createdAt: new Date(),
+		password: 'goham'
 	}, {
 		id:2,
 		username: "jack",
 		displayName: "Jack Payne",
 		profilePictureURL: "./img/jack.jpg",
-		createdAt: new Date()
+		createdAt: new Date(),
+		password: "sparrow"
 	}, {
 		id:3,
 		username: "ella",
 		displayName: "Ella Ellis",
 		profilePictureURL: "./img/ella.jpg",
-		createdAt: new Date()
+		createdAt: new Date(),
+		password: "bella"
 	}];
 
 	this.posts = [{

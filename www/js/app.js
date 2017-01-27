@@ -10,8 +10,21 @@ angular.module('starter', ['ionic', 'ionic.native', 'app.data-service'])
         }
     });
 })
+.run(function($rootScope, $state, dataService){
+    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+        if(dataService.getCurrentUser() == null && toState.name != 'login'){
+            $state.go('login');
+            event.preventDefault();
+        }
+    });
+})
 .config(function($stateProvider, $urlRouterProvider){
     $stateProvider
+    .state('login',{
+        url: '/login',
+        templateUrl: 'login.html',
+        controller: 'LoginCtrl'
+    })
     .state('root',{
         url: '/root',
         abstract: true,
@@ -72,7 +85,7 @@ angular.module('starter', ['ionic', 'ionic.native', 'app.data-service'])
             }
         }
     })
-    $urlRouterProvider.otherwise('/root/home');
+    $urlRouterProvider.otherwise('/login');
 })
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -85,6 +98,18 @@ angular.module('starter', ['ionic', 'ionic.native', 'app.data-service'])
         }
     });
 })
+.controller('LoginCtrl', ['$scope', 'dataService', '$state', function ($scope, dataService, $state) {
+    $scope.login = function(user, mdp){
+        dataService.getUserByUsernameAndPass(user,mdp).then(function(res){
+            if(res){
+                $state.go('root.home');
+            }
+            else{
+                alert('Invalid Credentials');
+            }
+        });
+    }
+}])
 .controller('IndexCtrl', ['$scope', 'dataService', function ($scope, dataService) {
     dataService.autoLogin();
     $scope.currentUser = dataService.getCurrentUser();
