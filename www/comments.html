@@ -1,14 +1,11 @@
-<ion-view>
-	<ion-nav-bar class="bar-royal">
-		<ion-nav-title>Comments</ion-nav-title>
-	</ion-nav-bar>
+<ion-view title="Comments">
 	<ion-content>
 		<ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
 		<ion-list>
 			<ion-item ng-repeat="comment in comments track by $index">
 				<div class="list">
 					<div class="item item-avatar">
-						<img ng-src="{{comment.fromUser.profilePictureURL}}">
+						<img ng-click="goTo(comment.fromUser.id)" ng-src="{{comment.fromUser.profilePictureURL}}">
 						<h2>{{comment.fromUser.displayName}}</h2>
 						<p>{{comment.message}}</p>
 						<button ng-if="currentUser.id === comment.fromUser.id" ng-click="deleteComment(comment)" class="button-icon ion-trash-b"></button>

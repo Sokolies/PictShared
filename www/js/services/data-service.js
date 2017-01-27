@@ -1,6 +1,6 @@
 angular.module('app.data-service', ['ionic', 'app.backend-services'])
 
-.service('dataService', function($q, $timeout, usersService, postsService, likesService, commentsService) {
+.service('dataService', function($q, $timeout, usersService, postsService, likesService, commentsService, imagesService) {
 
 	// A timeout applied to all queries to simulate network requets.
 	var defaultTimout = 500;
@@ -13,6 +13,24 @@ angular.module('app.data-service', ['ionic', 'app.backend-services'])
 	// Get the current user
 	this.getCurrentUser = function() {
 		return usersService.getCurrentUser();
+	}	
+
+	// Get a user by id
+	// Promise is resolved with a user object on success
+	this.getUserById = function(userId) {
+
+		var deferred = $q.defer();
+
+		$timeout(function() {
+			var user = usersService.getUserById(userId);
+			if (user != null) {
+				deferred.resolve(user);
+			} else {
+				deferred.reject(new Error("An unexpected error occured, please try again later."));
+			}
+		}, defaultTimout);
+
+		return deferred.promise;
 	}	
 
 	// Get all posts
@@ -139,6 +157,59 @@ angular.module('app.data-service', ['ionic', 'app.backend-services'])
 			var result = commentsService.deleteComment(comment);
 			if (result) {
 				deferred.resolve(true);
+			} else {
+				deferred.reject(new Error("An unexpected error occured, please try again later."));
+			}
+		}, defaultTimout);
+
+		return deferred.promise;
+	}
+
+	// Creates a new post (author is the urrent user)
+	// Promise is resolved with a post object on success
+	this.createPost = function(imageURL, message) {
+
+		var deferred = $q.defer();
+
+		$timeout(function() {
+			var post = postsService.createPost(imageURL, message);
+			if (post != null) {
+				deferred.resolve(post);
+			} else {
+				deferred.reject(new Error("An unexpected error occured, please try again later."));
+			}
+		}, defaultTimout);
+
+		return deferred.promise;
+	}
+
+
+	// Delete a post (if the author is the current user)
+	// Promise is resolved with true on success
+	this.deletePost = function(postId) {
+
+		var deferred = $q.defer();
+
+		$timeout(function() {
+			var result = postsService.deletePost(postId);
+			if (result) {
+				deferred.resolve(true);
+			} else {
+				deferred.reject(new Error("An unexpected error occured, please try again later."));
+			}
+		}, defaultTimout);
+
+		return deferred.promise;
+	}
+	
+	this.uploadImage = function(localImageURL) {
+
+		var deferred = $q.defer();
+
+		$timeout(function() {
+			var remoteImageURL = imagesService.uploadImage(localImageURL);
+			if (remoteImageURL) {
+				deferred.resolve(remoteImageURL);
 			} else {
 				deferred.reject(new Error("An unexpected error occured, please try again later."));
 			}

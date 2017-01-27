@@ -1,8 +1,12 @@
-<ion-view>
-	<ion-nav-bar class="bar-royal">
-		<ion-nav-title>Add</ion-nav-title>
-	</ion-nav-bar>
+<ion-view title="Add">
 	<ion-content>
-		<h1>ADD</h1>
+
+		<button ng-click="takePicture()">Prendre une photo</button>
+		<div class="list">
+			<label class="item item-input">
+				<input type="text" placeholder="Message">
+			</label>
+			<button class="button button-positive">Envoyer</button>
+		</div>
 	</ion-content>
 </ion-view>

@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'app.data-service'])
+angular.module('starter', ['ionic', 'ionic.native', 'app.data-service'])
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
         if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -24,6 +24,15 @@ angular.module('starter', ['ionic', 'app.data-service'])
             pageHome: {
                 templateUrl: 'home.html',
                 controller: 'HomeCtrl'
+            }
+        }
+    })
+    .state('root.user',{
+        url: '/user/:profile_id',
+        views: {
+            pageHome: {
+                templateUrl: 'profile.html',
+                controller: 'ProfileCtrl'
             }
         }
     })
@@ -55,7 +64,7 @@ angular.module('starter', ['ionic', 'app.data-service'])
         }
     })
     .state('root.profile',{
-        url: '/profile',
+        url: '/profile/:profile_id',
         views: {
             pageProfile: {
                 templateUrl: 'profile.html',
@@ -78,8 +87,9 @@ angular.module('starter', ['ionic', 'app.data-service'])
 })
 .controller('IndexCtrl', ['$scope', 'dataService', function ($scope, dataService) {
     dataService.autoLogin();
+    $scope.currentUser = dataService.getCurrentUser();
 }])
-.controller('HomeCtrl', ['$scope', 'dataService', function ($scope, dataService) {
+.controller('HomeCtrl', ['$scope', 'dataService', '$state', function ($scope, dataService, $state) {
     $scope.likeDisabled = false;
     // Récupération des posts avant d'afficher la vue
     $scope.$on('$ionicView.beforeEnter', function(){
@@ -129,8 +139,11 @@ angular.module('starter', ['ionic', 'app.data-service'])
             });
         }
     }
+    $scope.goTo = function(user_id){
+        $state.go('root.user', {profile_id: user_id});
+    }
 }])
-.controller('LikesCtrl', ['$scope', 'dataService', '$stateParams', function ($scope, dataService, $stateParams) {
+.controller('LikesCtrl', ['$scope', 'dataService', '$stateParams', '$state', function ($scope, dataService, $stateParams, $state) {
     dataService.getLikes($stateParams.post_id).then(function(likes){
         $scope.likes = likes;
     }, function(err){
@@ -144,14 +157,20 @@ angular.module('starter', ['ionic', 'app.data-service'])
             console.log('Erreur : ' + err);
         });
     };
+    $scope.goTo = function(user_id){
+        $state.go('root.user', {profile_id: user_id});
+    }
 }])
-.controller('CommentsCtrl', ['$scope', 'dataService', '$stateParams', '$ionicPopup', function ($scope, dataService, $stateParams, $ionicPopup) {
+.controller('CommentsCtrl', ['$scope', 'dataService', '$stateParams', '$ionicPopup', '$state', function ($scope, dataService, $stateParams, $ionicPopup, $state) {
     $scope.currentUser = dataService.getCurrentUser();
     dataService.getComments($stateParams.post_id).then(function(comments){
         $scope.comments = comments;
     }, function(err){
         console.log('Erreur : ' + err);
     });
+    $scope.goTo = function(user_id){
+        $state.go('root.user', {profile_id: user_id});
+    }
     $scope.doRefresh = function() {
         dataService.getComments($stateParams.post_id).then(function(comments){
             $scope.comments = comments;
@@ -195,10 +214,25 @@ angular.module('starter', ['ionic', 'app.data-service'])
         });
     };
 }])
-.controller('AddCtrl', ['$scope',  'dataService', function ($scope, dataService) {
+.controller('AddCtrl', ['$scope',  'dataService', '$cordovaCamera', function ($scope, dataService, $cordovaCamera) {
     console.log(dataService.getCurrentUser());
+
+    $scope.takePicture = function(){
+        var options = {
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.CAMERA
+        }
+        $cordovaCamera.getPicture(options).then(function(image){
+            $scope.imageURI = image;
+        }, function(error){
+            alert('Failed with error' +  error.code + ' : ' + error.message);
+        });
+    }
 }])
-.controller('ProfileCtrl', ['$scope', 'dataService', function ($scope, dataService) {
-    $scope.currentUser = dataService.getCurrentUser();
-    console.log($scope.currentUser);
+.controller('ProfileCtrl', ['$scope', 'dataService', '$stateParams', function ($scope, dataService, $stateParams) {
+    dataService.getUserById($stateParams.profile_id).then(function(user){
+        $scope.profileUser = user;
+    }, function(err){
+        console.log('Erreur ', err);
+    });
 }])

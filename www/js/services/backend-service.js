@@ -87,7 +87,9 @@ angular.module('app.backend-services', ['ionic', 'app.database-service'])
 			delete post.userId
 			post.likedByCurrentUser = usersService.currentUserLikesPost(post.id);
 		});
-		
+		posts.sort(function(a, b) {
+			return b.createdAt - a.createdAt;
+		});
 		return posts;
 	}	
 
@@ -115,6 +117,71 @@ angular.module('app.backend-services', ['ionic', 'app.database-service'])
 		callback(foundPost);
 	}
 
+	this.createPost = function(imageURL, message) {
+
+		var currentUser = usersService.getCurrentUser();
+		if (currentUser == null) {
+			return false;
+		}
+		var newPost = {
+			id: Math.floor(Math.random() * Math.pow(2, 32)),
+			userId: currentUser.id,
+			imageURL: imageURL,
+			message: message,
+			commentsCount: 0,
+			likesCount: 0,
+			createdAt: new Date()
+		}
+		databaseService.posts.push(newPost);
+
+		newPost = angular.copy(newPost);
+		newPost.user = currentUser;
+		delete newPost.userId;
+		
+		return newPost;
+	}
+
+	this.deletePost = function(postId) {
+
+		var currentUser = usersService.getCurrentUser();
+		if (currentUser == null) {
+			return false;
+		}
+
+		var newCommentsArray = [];
+		angular.forEach(databaseService.comments, function(comment) {
+			if(!('id' in comment)) {
+				console.error('Missing id for comment ' + comment);
+				return;
+			}
+			if (comment.postId != postId) {
+				newCommentsArray.push(comment);
+			}
+		});
+		databaseService.comments = newCommentsArray;
+
+		var newLikesArray = [];
+		angular.forEach(databaseService.likes, function(like) {
+			if(!('id' in like)) {
+				console.error('Missing id for like ' + like);
+				return;
+			}
+			if (like.postId != postId) {
+				newLikesArray.push(like);
+			}
+		});
+		databaseService.likes = newLikesArray;
+
+		var databasePosts = databaseService.posts;
+		for (var i = 0; i < databasePosts.length; i++) {
+			var post = databasePosts[i];
+			if (post.id == postId && post.userId == currentUser.id) {
+				databasePosts.splice(i, 1);
+				return true;
+			}
+		}
+		return false;
+	}
 })
 
 .service('likesService', function(databaseService, usersService, postsService) {
@@ -313,4 +380,12 @@ angular.module('app.backend-services', ['ionic', 'app.database-service'])
 		return (removedElements.length >= 1);
 	}
 
+})
+
+.service('imagesService', function(databaseService) {
+
+	this.uploadImage = function(localImageURL) {
+
+		return localImageURL;
+	}
 })

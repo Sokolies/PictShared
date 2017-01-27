@@ -1,14 +1,14 @@
-<ion-view>
-	<ion-nav-bar class="bar-royal">
-		<ion-nav-title>Profile</ion-nav-title>
-	</ion-nav-bar>
+<ion-view title="Profile">
 	<ion-content>
-		<div class="card">
-			<div class="item item-avatar">
-				<h2>{{currentUser.displayName}}</h2>
-				<img ng-src="{{currentUser.profilePictureURL}}">
-				<p>Subscribe since {{currentUser.createdAt | date : 'LLLL d, yyyy'}}</p>
-				</div>
+		<div class="list card">
+			<div class="item">
+				<h2>{{profileUser.displayName}}</h2>
+				<p>{{profileUser.username}}</p>
 			</div>
-		</ion-content>
-	</ion-view>
+
+			<div class="item item-image">
+				<img ng-src="{{profileUser.profilePictureURL}}">
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

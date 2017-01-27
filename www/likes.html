@@ -1,14 +1,11 @@
-<ion-view>
-	<ion-nav-bar class="bar-royal">
-		<ion-nav-title>Likes</ion-nav-title>
-	</ion-nav-bar>
+<ion-view title="Likes">
 	<ion-content>
 		<ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
 		<ion-list>
 			<ion-item ng-repeat="like in likes track by $index">
 				<div class="list">
 					<div class="item item-avatar">
-						<img ng-src="{{like.fromUser.profilePictureURL}}">
+						<img ng-click="goTo(like.fromUser.id)" ng-src="{{like.fromUser.profilePictureURL}}">
 						<h2>{{like.fromUser.displayName}}</h2>
 					</div>
 				</div>				
